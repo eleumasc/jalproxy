@@ -1,1 +1,1 @@
-# jalangi-proxy
+# jalproxy
