@@ -3,8 +3,8 @@ const mockttp = require('mockttp');
 (async () => {
     const server = mockttp.getLocal({
         https: {
-            keyPath: './certs/testCA.key',
-            certPath: './certs/testCA.pem'
+            keyPath: 'certs/mockttp-ca.key',
+            certPath: 'certs/mockttp-ca.pem'
         }
     });
 
