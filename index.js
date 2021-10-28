@@ -97,7 +97,7 @@
             const origFileName = "orig" + dotext;
             await fsPromises.writeFile(path.join(outDir, origFileName), origBody);
             const instFileName = "inst" + dotext;
-            await enstruments(origFileName, instFileName, outDir, info.url);
+            await esnstrument(origFileName, instFileName, outDir, info.url);
             const instBody = await fsPromises.readFile(path.join(outDir, instFileName));
             return instBody;
         } finally {
@@ -105,7 +105,7 @@
         }
     }
 
-    async function enstruments(origFileName, instFileName, outDir, url) {
+    async function esnstrument(origFileName, instFileName, outDir, url) {
         const subProcess = child_process.spawn("node", [
             ESNSTRUMENT_PATH, ...JALANGI_ARGS,
             path.join(outDir, origFileName),
