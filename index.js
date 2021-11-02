@@ -21,12 +21,7 @@
 
     const ESNSTRUMENT_PATH = path.join(JALANGI_HOME, "src/js/commands/esnstrument_cli.js");
 
-    const JALANGI_ARGS = [
-        "--inlineIID",
-        "--inlineSource",
-        "--analysis", path.join(JALANGI_HOME, "src/js/sample_analyses/ChainedAnalyses.js"),
-        "--analysis", path.join(JALANGI_HOME, "src/js/runtime/analysisCallbackTemplate.js")
-    ];
+    const [,, ...JALANGI_ARGS] = process.argv;
 
     const HTML_MIME_TYPES = ["text/html"];
 
