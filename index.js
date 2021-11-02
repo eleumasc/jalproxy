@@ -96,7 +96,11 @@
             const instBody = await fsPromises.readFile(path.join(outDir, instFileName));
             return instBody;
         } finally {
-            await fsPromises.rm(outDir, { recursive: true, force: true });
+            if (fsPromises.rm) {
+                await fsPromises.rm(outDir, { recursive: true, force: true });
+            } else {
+                await unsafeRemoveRecursiveForce(outDir);
+            }
         }
     }
 
@@ -119,7 +123,21 @@
             subProcess.on('error', function (err) {
                 reject(err);
             });
-        })
+        });
+    }
+
+    async function unsafeRemoveRecursiveForce(path) {
+        const subProcess = child_process.spawn("rm", [ "-rf", path ]);
+
+        return new Promise((resolve, reject) => {
+            subProcess.on('exit', function () {
+                resolve();
+            });
+
+            subProcess.on('error', function (err) {
+                reject(err);
+            });
+        });
     }
 
 })();

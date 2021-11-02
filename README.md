@@ -4,7 +4,7 @@ Reverse proxy for on-the-fly instrumentation with jalangi2
 
 ## Requirements
 
- - node v14.0.0+
+ - node (possibly v14.0.0+)
 
 ## Setup
 
@@ -16,4 +16,4 @@ Reverse proxy for on-the-fly instrumentation with jalangi2
 
 ## Run
 
- - Open a terminal and run the command `node index.js`
+ - Open a terminal and run the command `node index.js ...JALANGI_ARGS`
