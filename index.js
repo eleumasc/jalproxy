@@ -8,6 +8,7 @@
     }
 
     const mockttp = require("mockttp");
+    const babel = require("@babel/core");
 
     const child_process = require("child_process");
     const fs = require("fs");
@@ -85,6 +86,11 @@
     console.log(`Server running on port ${server.port}`);
 
     async function instrument(origBody, info) {
+        if (info.secFetchDest === "script") {
+            origBody = babel.transform(origBody, {
+                presets: ["@babel/preset-env"],
+            }).code;
+        }
         const outDir = path.join(STORAGE_PATH, info.id);
         await fsPromises.mkdir(outDir);
         try {
