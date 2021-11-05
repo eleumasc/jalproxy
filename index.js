@@ -88,7 +88,7 @@
     async function instrument(origBody, info) {
         if (info.secFetchDest === "script") {
             origBody = babel.transform(origBody, {
-                presets: ["@babel/preset-env"],
+                presets: ["@babel/preset-env", { "sourceType": "script" }],
             }).code;
         }
         const outDir = path.join(STORAGE_PATH, info.id);
