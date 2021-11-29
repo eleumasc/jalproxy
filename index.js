@@ -82,10 +82,13 @@
 
     const STORAGE_PATH = await fsPromises.mkdtemp(path.join(os.tmpdir(), "jalproxy-"));
 
+    const LOGS_PATH =  "logs.txt";
+
     await server.start();
     console.log(`Server running on port ${server.port}`);
 
     async function instrument(origBody, info) {
+        await fsPromises.appendFile(LOGS_PATH, `${info.id}: ${info.url}\n`);
         if (info.secFetchDest === "script") {
             origBody = babel.transform(origBody, {
                 presets: ["@babel/preset-env", { "sourceType": "script" }],
