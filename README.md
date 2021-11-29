@@ -4,7 +4,7 @@ Reverse proxy for on-the-fly instrumentation with jalangi2
 
 ## Requirements
 
- - node (possibly v14.14.0+)
+ - node (>=12.0.0)
 
 ## Setup
 
