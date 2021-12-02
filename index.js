@@ -32,12 +32,11 @@
         "application/x-javascript"
     ];
 
-    const server = mockttp.getLocal({
-        https: {
-            keyPath: path.normalize("certs/mockttp-ca.key"),
-            certPath: path.normalize("certs/mockttp-ca.pem")
-        }
-    });
+    const https = {
+        key: await fsPromises.readFile(path.normalize("certs/mockttp-ca.key")),
+        cert: await fsPromises.readFile(path.normalize("certs/mockttp-ca.pem"))
+    };
+    const server = mockttp.getLocal({ https });
 
     const httpRequestInfo = new Map();
 
@@ -83,7 +82,10 @@
     const STORAGE_PATH = await fsPromises.mkdtemp(path.join(os.tmpdir(), "jalproxy-"));
 
     await server.start();
+
+    const caFingerprint = mockttp.generateSPKIFingerprint(https.cert);
     console.log(`Server running on port ${server.port}`);
+    console.log(`CA cert fingerprint ${caFingerprint}`);
 
     async function instrument(origBody, info) {
         if (info.secFetchDest === "script") {
