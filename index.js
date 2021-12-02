@@ -81,6 +81,8 @@
 
     const STORAGE_PATH = await fsPromises.mkdtemp(path.join(os.tmpdir(), "jalproxy-"));
 
+    const LOGS_PATH =  "logs.txt";
+
     await server.start();
 
     const caFingerprint = mockttp.generateSPKIFingerprint(https.cert);
@@ -88,6 +90,7 @@
     console.log(`CA cert fingerprint ${caFingerprint}`);
 
     async function instrument(origBody, info) {
+        await fsPromises.appendFile(LOGS_PATH, `${info.id}: ${info.url}\n`);
         if (info.secFetchDest === "script") {
             origBody = babel.transform(origBody, {
                 presets: ["@babel/preset-env", { "sourceType": "script" }],
@@ -106,8 +109,6 @@
         } finally {
             if (fsPromises.rm) {
                 await fsPromises.rm(outDir, { recursive: true, force: true });
-            } else {
-                await unsafeRemoveRecursiveForce(outDir);
             }
         }
     }
@@ -126,20 +127,6 @@
         return new Promise((resolve, reject) => {
             subProcess.on('exit', function (code, signal) {
                 resolve({ code: code, signal: signal });
-            });
-
-            subProcess.on('error', function (err) {
-                reject(err);
-            });
-        });
-    }
-
-    async function unsafeRemoveRecursiveForce(path) {
-        const subProcess = child_process.spawn("rm", [ "-rf", path ]);
-
-        return new Promise((resolve, reject) => {
-            subProcess.on('exit', function () {
-                resolve();
             });
 
             subProcess.on('error', function (err) {
