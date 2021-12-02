@@ -107,8 +107,6 @@
         } finally {
             if (fsPromises.rm) {
                 await fsPromises.rm(outDir, { recursive: true, force: true });
-            } else {
-                await unsafeRemoveRecursiveForce(outDir);
             }
         }
     }
@@ -127,20 +125,6 @@
         return new Promise((resolve, reject) => {
             subProcess.on('exit', function (code, signal) {
                 resolve({ code: code, signal: signal });
-            });
-
-            subProcess.on('error', function (err) {
-                reject(err);
-            });
-        });
-    }
-
-    async function unsafeRemoveRecursiveForce(path) {
-        const subProcess = child_process.spawn("rm", [ "-rf", path ]);
-
-        return new Promise((resolve, reject) => {
-            subProcess.on('exit', function () {
-                resolve();
             });
 
             subProcess.on('error', function (err) {
